@@ -255,6 +255,7 @@ public class GradesFragment extends Fragment {
 
                 for (final YearGrade year : result.gradeSet) {
                     HebrewTranslator.requestTranslation(
+                            getActivity(),
                             year.year,
                             HebrewTranslator.HINT_YEAR, new HebrewTranslator.TranslationCallBack() {
                                 @Override
@@ -265,6 +266,7 @@ public class GradesFragment extends Fragment {
                             });
                     for (final CourseGrade course : year.grades) {
                         HebrewTranslator.requestTranslation(
+                                getActivity(),
                                 course.courseName,
                                 HebrewTranslator.HINT_COURSE, new HebrewTranslator.TranslationCallBack() {
                                     @Override

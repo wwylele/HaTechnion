@@ -3,7 +3,6 @@ package com.wwylele.hatechnion;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.service.voice.VoiceInteractionSession;
 import android.util.Log;
 
 import org.json.JSONObject;
@@ -22,7 +21,12 @@ import java.net.URLEncoder;
 public class HebrewTranslator {
     public static final int HINT_COURSE = 1, HINT_YEAR = 2;
 
-    public static void requestTranslation(String origin, int hint, TranslationCallBack translationCallBack) {
+    public static HebrewDbHelper hebrewDictionary = null;
+
+    public static void requestTranslation(Context context, String origin, int hint, TranslationCallBack translationCallBack) {
+        if (hebrewDictionary == null) {
+            hebrewDictionary = new HebrewDbHelper(context);
+        }
         new TranslationTask(translationCallBack).execute(origin);
     }
 
@@ -101,7 +105,8 @@ public class HebrewTranslator {
         protected String doInBackground(String... params) {
             String origin = params[0];
 
-            // TODO Cache the translation result
+            String fromDictionary = hebrewDictionary.get(origin);
+            if (fromDictionary != null) return fromDictionary;
 
             synchronized (TranslationTask.class) {
                 if (msTranslatorTicket == null) {
@@ -110,6 +115,7 @@ public class HebrewTranslator {
             }
 
             if (msTranslatorTicket != null) {
+                Log.v("HaTechnion", "try ms translator");
                 HttpURLConnection urlConnection = null;
                 BufferedReader in = null;
                 try {
@@ -130,7 +136,9 @@ public class HebrewTranslator {
                     xpp.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
                     xpp.setInput(in);
                     xpp.nextTag();
-                    return XmlUtility.readTaggedText(xpp, "string");
+                    String fromWeb = XmlUtility.readTaggedText(xpp, "string");
+                    hebrewDictionary.add(origin, fromWeb);
+                    return fromWeb;
                 } catch (Exception e) {
                     Log.e("HaTechnion", "MsTranslator failed", e);
                     return null;
