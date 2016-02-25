@@ -212,16 +212,16 @@ public class LoginActivity extends Activity {
                 xpp.setInput(in);
                 xpp.nextTag();
                 xpp.require(XmlPullParser.START_TAG, null, "app");
-                xpp.next();
+                xpp.nextTag();
                 xpp.require(XmlPullParser.START_TAG, null, "result");
-                xpp.next();
+                xpp.nextTag();
                 int retCode = Integer.parseInt(XmlUtility.readTaggedText(xpp, "ret_code"));
-                xpp.next();
+                xpp.nextTag();
                 String retText = XmlUtility.readTaggedText(xpp, "text");
-                xpp.next();
+                xpp.nextTag();
                 Log.v("HaTechnion", "retCode=" + retCode + " retText=" + retText);
                 xpp.require(XmlPullParser.END_TAG, null, "result");
-                xpp.next();
+                xpp.nextTag();
 
                 if (retCode != 0) {
                     switch (retText) {
@@ -238,13 +238,13 @@ public class LoginActivity extends Activity {
                 }
 
                 xpp.require(XmlPullParser.START_TAG, null, "data");
-                xpp.next();
+                xpp.nextTag();
                 String ticket = XmlUtility.readTaggedText(xpp, "id");
-                xpp.next();
+                xpp.nextTag();
                 String real = XmlUtility.readTaggedText(xpp, "name");
-                xpp.next();
+                xpp.nextTag();
                 String username_ret = XmlUtility.readTaggedText(xpp, "user_id");
-                xpp.next();
+                xpp.nextTag();
 
                 in.close();
                 in = null;

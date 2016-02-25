@@ -206,21 +206,21 @@ public class GradesFragment extends Fragment {
                 xpp.setInput(in);
                 xpp.nextTag();
                 xpp.require(XmlPullParser.START_TAG, null, "app");
-                xpp.next();
+                xpp.nextTag();
                 xpp.require(XmlPullParser.START_TAG, null, "result");
-                xpp.next();
+                xpp.nextTag();
                 int retCode = Integer.parseInt(XmlUtility.readTaggedText(xpp, "ret_code"));
-                xpp.next();
+                xpp.nextTag();
                 String retText = XmlUtility.readTaggedText(xpp, "text");
-                xpp.next();
+                xpp.nextTag();
                 Log.v("HaTechnion", "retCode=" + retCode + " retText=" + retText);
                 xpp.require(XmlPullParser.END_TAG, null, "result");
-                xpp.next();
+                xpp.nextTag();
                 if (retCode != 0) {
                     return new FetchGradesResult(FetchGradesResult.E_OTHER, retText, null);
                 }
                 xpp.require(XmlPullParser.START_TAG, null, "data");
-                xpp.next();
+                xpp.nextTag();
                 YearGrade[] gradeSet = GradesXmlParser.parseYears(xpp);
 
                 in.close();
