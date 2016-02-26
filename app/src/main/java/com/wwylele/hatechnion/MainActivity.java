@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 GradesFragment.class,
                 ExamsFragment.class
         };
+
         public PagerAdapter(FragmentManager fm) {
             super(fm);
         }
