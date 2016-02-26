@@ -91,7 +91,7 @@ public class ExamsFragment extends Fragment {
                         time = XmlUtility.readTaggedText(parser, "time");
                         time = time.replace("עד", "~");
                         break;
-                    case " moed ":
+                    case "moed":
                         exam.moed = XmlUtility.readTaggedText(parser, "moed");
                         switch (exam.moed) {
                             case "מועד ב":
