@@ -19,8 +19,6 @@
 
     <string name="average_grade">average grade</string>
 
-    <string name="he_spring">אביב</string>
-    <string name="he_winter">חורף</string>
 
     <string name="title_fragment_grades">Grades</string>
     <string name="title_fragment_exams">Exams</string>

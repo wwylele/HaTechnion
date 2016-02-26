@@ -279,6 +279,16 @@ public class ExamsFragment extends Fragment {
                                     adapter.notifyDataSetChanged();
                                 }
                             });
+                    HebrewTranslator.requestTranslation(
+                            getActivity(),
+                            exam.room,
+                            HebrewTranslator.HINT_ROOM, new HebrewTranslator.TranslationCallBack() {
+                                @Override
+                                public void callback(String result) {
+                                    exam.room = result;
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
                 }
 
 

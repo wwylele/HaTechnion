@@ -19,17 +19,17 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 public class HebrewTranslator {
-    public static final int HINT_COURSE = 1, HINT_YEAR = 2;
+    public static final int HINT_COURSE = 1, HINT_YEAR = 2, HINT_ROOM = 3;
 
     public static HebrewDbHelper hebrewDictionary = null;
 
-    public static String tryTranslateYear(Context context, String origin) {
+    public static String tryTranslateYear(String origin) {
         try {
             int yr = origin.indexOf('/');
             if (yr == -1) return null;
             String result = origin.substring(yr - 4, yr + 3);
-            if (origin.contains(context.getString(R.string.he_spring))) result += " Spring";
-            if (origin.contains(context.getString(R.string.he_winter))) result += " Winter";
+            if (origin.contains("אביב")) result += " Spring";
+            if (origin.contains("חורף")) result += " Winter";
             return result;
         } catch (Exception ignored) {
             return null;
@@ -40,11 +40,16 @@ public class HebrewTranslator {
     public static void requestTranslation(Context context, String origin, int hint, TranslationCallBack translationCallBack) {
 
         if (hint == HINT_YEAR) {
-            String result = tryTranslateYear(context, origin);
+            String result = tryTranslateYear(origin);
             if (result != null) {
                 translationCallBack.callback(result);
                 return;
             }
+        } else if (hint == HINT_ROOM) {
+            translationCallBack.callback(origin.replace("חדר", "Room")
+                    .replace("רבין", "Rabin")
+                    .replace("אולמן", "Ullman"));
+            return;
         }
 
         if (hebrewDictionary == null) {
