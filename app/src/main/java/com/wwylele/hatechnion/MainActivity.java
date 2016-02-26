@@ -37,11 +37,11 @@ public class MainActivity extends AppCompatActivity {
     class PagerAdapter extends FragmentPagerAdapter {
         String[] pageNames = {
                 getString(R.string.title_fragment_grades),
-                getString(R.string.title_fragment_messages)
+                getString(R.string.title_fragment_exams)
         };
         Class[] pageFragments = {
                 GradesFragment.class,
-                MessagesFragment.class
+                ExamsFragment.class
         };
         public PagerAdapter(FragmentManager fm) {
             super(fm);

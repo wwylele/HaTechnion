@@ -23,5 +23,5 @@
     <string name="he_winter">חורף</string>
 
     <string name="title_fragment_grades">Grades</string>
-    <string name="title_fragment_messages">Messages</string>
+    <string name="title_fragment_exams">Exams</string>
 </resources>

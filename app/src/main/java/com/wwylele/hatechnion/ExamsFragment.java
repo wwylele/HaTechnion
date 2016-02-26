@@ -8,17 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-public class MessagesFragment extends Fragment {
+public class ExamsFragment extends Fragment {
 
 
-    public MessagesFragment() {
+    public ExamsFragment() {
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_messages, container, false);
+        return inflater.inflate(R.layout.fragment_exams, container, false);
     }
 
 }
