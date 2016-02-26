@@ -10,11 +10,11 @@ using System.IO;
 
 namespace FakeServer {
 
-    
+
 
     class Program {
 
-        
+
 
         static void Main(string[] args) {
             Random random = new Random();
@@ -80,6 +80,7 @@ namespace FakeServer {
                                 }
                                 break;
                             }
+                        case "182":
                         case "185": {
                                 string ticket = nodeApp.SelectSingleNode("id").InnerText;
                                 string unique = nodeApp.SelectSingleNode("unique_id").InnerText;
@@ -87,13 +88,21 @@ namespace FakeServer {
                                              s.unique == unique && s.ticket == ticket select s;
                                 if(cursor.Any()) {
                                     Student student = cursor.First();
-                                    XmlSerializer ser = new XmlSerializer(typeof(YearGrades));
+                                    XmlSerializer ser;
                                     using(var stream = new MemoryStream()) {
-                                        ser.Serialize(stream, student.yearGrades);
+                                        if(req == "185") {
+                                            ser = new XmlSerializer(typeof(YearGrades));
+                                            ser.Serialize(stream, student.yearGrades);
+                                        } else if(req == "182") {
+                                            ser = new XmlSerializer(typeof(Exams));
+                                            ser.Serialize(stream, student.exams);
+                                        }
+
                                         stream.Position = 0;
                                         using(XmlReader reader = XmlReader.Create(stream)) {
                                             dataX = XElement.Load(reader);
                                             dataX.Name = "data";
+                                            dataX.RemoveAttributes();
                                         }
                                     }
                                 } else {

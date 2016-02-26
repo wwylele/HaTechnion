@@ -21,6 +21,19 @@ namespace FakeServer {
         public year_grade[] year_grades;
     }
 
+    public class exam {
+        public string name;
+        public string date;
+        public string time;
+        public string examStartTime;
+        public string examEndTime;
+        public string room;
+        public string semester;
+        public string moed;
+    }
+    public class Exams {
+        public exam[] exams;
+    }
 
     public class Student {
         public string username;
@@ -29,6 +42,7 @@ namespace FakeServer {
         public string unique;
         public string ticket;
         public YearGrades yearGrades;
+        public Exams exams;
 
     }
 
@@ -56,7 +70,19 @@ namespace FakeServer {
                             }
                         }
                     },
-                } }
+                } },
+                exams=new Exams {exams=new exam[] {
+                    new exam {
+                        name="foo",date="01/02/0003",time="13:00 עד 16:00",
+                        examStartTime="01/02/0003T13:00",examEndTime="01/02/0003T16:00",
+                        room="רבין           חדר 501,502",semester="what",moed="מועד ב"
+                    },
+                    new exam {
+                        name="bar",date="5000BC",time="No time",
+                        examStartTime="no start",examEndTime="no end",
+                        room="bbq",semester="b**ch",moed="moed?"
+                    },
+                }}
             },
             new Student {
                 username="test",password="123456",real="TEST!",
@@ -69,7 +95,14 @@ namespace FakeServer {
                             }
                         }
                     },
-                } }
+                } },
+                exams=new Exams {exams=new exam[] {
+                    new exam {
+                        name="???",date="32/13/3001",time="Future",
+                        examStartTime="",examEndTime="",
+                        room="",semester="",moed="מועד א"
+                    },
+                }}
             },
         };
     }
