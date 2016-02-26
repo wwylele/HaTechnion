@@ -10,73 +10,11 @@ using System.IO;
 
 namespace FakeServer {
 
-    public class grade {
-        public string name;
-        public string final_grade;
-        public string credits;
-    }
-    public class year_grade {
-        public string year;
-        public string year_system;
-        public string average_grade;
-        public grade[] grades;
-    }
-
-    public class YearGrades {
-        public year_grade[] year_grades;
-    }
-
-    public class Student {
-        public string username;
-        public string password;
-        public string real;
-        public string unique;
-        public string ticket;
-        public YearGrades yearGrades;
-
-    }
+    
 
     class Program {
 
-        static Student[] students = new Student[] {
-            new Student {
-                username="wwylele",password="pass",real="WWYLELE",
-                yearGrades=new YearGrades { year_grades=new year_grade[] {
-                    new year_grade {
-                        year="first",year_system="1",average_grade="50",
-                        grades=new grade[] {
-                            new grade {
-                                name="foo",final_grade="90",credits="3"
-                            },
-                            new grade {
-                                name="bar",final_grade="10",credits="2"
-                            }
-                        }
-                    },
-                    new year_grade {
-                        year="second",year_system="2",average_grade="100",
-                        grades=new grade[] {
-                            new grade {
-                                name="f***",final_grade="100",credits="0"
-                            }
-                        }
-                    },
-                } }
-            },
-            new Student {
-                username="test",password="123456",real="TEST!",
-                yearGrades=new YearGrades { year_grades=new year_grade[] {
-                    new year_grade {
-                        year="test year",year_system="-1",average_grade="0",
-                        grades=new grade[] {
-                            new grade {
-                                name="what",final_grade="0",credits="10"
-                            }
-                        }
-                    },
-                } }
-            },
-        };
+        
 
         static void Main(string[] args) {
             Random random = new Random();
@@ -122,7 +60,7 @@ namespace FakeServer {
                                 string username = nodeApp.SelectSingleNode("login_name").InnerText;
                                 string password = nodeApp.SelectSingleNode("pass").InnerText;
                                 string unique = nodeApp.SelectSingleNode("unique_id").InnerText;
-                                var cursor = from s in students where s.username == username select s;
+                                var cursor = from s in Data.students where s.username == username select s;
                                 if(cursor.Any()) {
                                     Student student = cursor.First();
                                     if(student.password == password) {
@@ -145,7 +83,7 @@ namespace FakeServer {
                         case "185": {
                                 string ticket = nodeApp.SelectSingleNode("id").InnerText;
                                 string unique = nodeApp.SelectSingleNode("unique_id").InnerText;
-                                var cursor = from s in students where
+                                var cursor = from s in Data.students where
                                              s.unique == unique && s.ticket == ticket select s;
                                 if(cursor.Any()) {
                                     Student student = cursor.First();
