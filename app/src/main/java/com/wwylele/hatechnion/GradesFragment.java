@@ -178,7 +178,6 @@ public class GradesFragment extends Fragment {
                 xs.flush();
                 String loginRequest = "appRequest=" + URLEncoder.encode(
                         sw.toString(), "UTF-8");
-                Log.v("HaTechnion", loginRequest);
 
                 urlConnection = (HttpURLConnection) (new URL(BuildConfig.xxx_api_url).openConnection());
                 urlConnection.setUseCaches(false);
@@ -197,38 +196,27 @@ public class GradesFragment extends Fragment {
                 out = null;
                 int responseCode = urlConnection.getResponseCode();
                 if (responseCode != HttpURLConnection.HTTP_OK)
-                    throw new Exception("HttpURLConnection." + responseCode);
+                    throw new IOException("HttpURLConnection." + responseCode);
                 in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 
                 XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
                 XmlPullParser xpp = factory.newPullParser();
                 xpp.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
                 xpp.setInput(in);
-                xpp.nextTag();
-                xpp.require(XmlPullParser.START_TAG, null, "app");
-                xpp.nextTag();
-                xpp.require(XmlPullParser.START_TAG, null, "result");
-                xpp.nextTag();
-                int retCode = Integer.parseInt(XmlUtility.readTaggedText(xpp, "ret_code"));
-                xpp.nextTag();
-                String retText = XmlUtility.readTaggedText(xpp, "text");
-                xpp.nextTag();
-                Log.v("HaTechnion", "retCode=" + retCode + " retText=" + retText);
-                xpp.require(XmlPullParser.END_TAG, null, "result");
-                xpp.nextTag();
-                if (retCode != 0) {
-                    return new FetchGradesResult(FetchGradesResult.E_OTHER, retText, null);
-                }
-                xpp.require(XmlPullParser.START_TAG, null, "data");
-                xpp.nextTag();
+                XmlUtility.readResult(xpp);
                 YearGrade[] gradeSet = GradesXmlParser.parseYears(xpp);
 
                 in.close();
                 in = null;
                 return new FetchGradesResult(FetchGradesResult.E_SUCCESS, null, gradeSet);
-
-            } catch (Exception e) {
-                Log.e("HaTechnion", "fetch grades failed", e);
+            } catch (XmlUtility.BadResultException e) {
+                Log.e("FetchGradesTask", "bad return code", e);
+                return new FetchGradesResult(FetchGradesResult.E_OTHER, e.text, null);
+            } catch (XmlPullParserException e) {
+                Log.e("FetchGradesTask", "failed to parse xml", e);
+                return new FetchGradesResult(FetchGradesResult.E_OTHER, "fetch failed", null);
+            } catch (IOException e) {
+                Log.e("FetchGradesTask", "IOException", e);
                 return new FetchGradesResult(FetchGradesResult.E_OTHER, "fetch failed", null);
             } finally {
 

@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
@@ -184,7 +185,6 @@ public class LoginActivity extends Activity {
                 xs.flush();
                 String loginRequest = "appRequest=" + URLEncoder.encode(
                         sw.toString(), "UTF-8");
-                Log.v("HaTechnion", loginRequest);
 
                 urlConnection = (HttpURLConnection) (new URL(BuildConfig.xxx_api_url).openConnection());
                 urlConnection.setUseCaches(false);
@@ -203,42 +203,15 @@ public class LoginActivity extends Activity {
                 out = null;
                 int responseCode = urlConnection.getResponseCode();
                 if (responseCode != HttpURLConnection.HTTP_OK)
-                    throw new Exception("HttpURLConnection." + responseCode);
+                    throw new IOException("HttpURLConnection." + responseCode);
                 in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 
                 XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
                 XmlPullParser xpp = factory.newPullParser();
                 xpp.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
                 xpp.setInput(in);
-                xpp.nextTag();
-                xpp.require(XmlPullParser.START_TAG, null, "app");
-                xpp.nextTag();
-                xpp.require(XmlPullParser.START_TAG, null, "result");
-                xpp.nextTag();
-                int retCode = Integer.parseInt(XmlUtility.readTaggedText(xpp, "ret_code"));
-                xpp.nextTag();
-                String retText = XmlUtility.readTaggedText(xpp, "text");
-                xpp.nextTag();
-                Log.v("HaTechnion", "retCode=" + retCode + " retText=" + retText);
-                xpp.require(XmlPullParser.END_TAG, null, "result");
-                xpp.nextTag();
+                XmlUtility.readResult(xpp);
 
-                if (retCode != 0) {
-                    switch (retText) {
-                        case "bad login name":
-                            return new UserLoginResult(UserLoginResult.E_USERNAME,
-                                    retText, null, null, null);
-                        case "wrong password":
-                            return new UserLoginResult(UserLoginResult.E_PASSWORD,
-                                    retText, null, null, null);
-                        default:
-                            return new UserLoginResult(UserLoginResult.E_OTHER,
-                                    retText, null, null, null);
-                    }
-                }
-
-                xpp.require(XmlPullParser.START_TAG, null, "data");
-                xpp.nextTag();
                 String ticket = XmlUtility.readTaggedText(xpp, "id");
                 xpp.nextTag();
                 String real = XmlUtility.readTaggedText(xpp, "name");
@@ -250,9 +223,24 @@ public class LoginActivity extends Activity {
                 in = null;
                 return new UserLoginResult(UserLoginResult.E_SUCCESS,
                         "", username_ret, real, ticket);
-
-            } catch (Exception e) {
-                Log.e("HaTechnion", "login connection failed", e);
+            } catch (XmlUtility.BadResultException e) {
+                switch (e.text) {
+                    case "bad login name":
+                        return new UserLoginResult(UserLoginResult.E_USERNAME,
+                                e.text, null, null, null);
+                    case "wrong password":
+                        return new UserLoginResult(UserLoginResult.E_PASSWORD,
+                                e.text, null, null, null);
+                    default:
+                        return new UserLoginResult(UserLoginResult.E_OTHER,
+                                e.text, null, null, null);
+                }
+            } catch (XmlPullParserException e) {
+                Log.e("UserLoginTask", "failed to parse xml", e);
+                return new UserLoginResult(UserLoginResult.E_OTHER,
+                        getString(R.string.error_connection), null, null, null);
+            } catch (IOException e) {
+                Log.e("UserLoginTask", "IOException", e);
                 return new UserLoginResult(UserLoginResult.E_OTHER,
                         getString(R.string.error_connection), null, null, null);
             } finally {
