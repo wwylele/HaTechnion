@@ -12,7 +12,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textSize="20sp"
-            android:text="A"
             android:id="@+id/exam_list_item_moed_test"
             android:gravity="left|bottom"
             android:paddingLeft="10dp"
@@ -22,7 +21,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textSize="20sp"
-            android:text="Differential and integral calculus"
             android:id="@+id/exam_list_item_name_test"
             android:gravity="left|bottom" />
     </LinearLayout>
@@ -34,8 +32,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textSize="15sp"
-            android:text="Time &amp; date:"
-            android:gravity="left|bottom"
+            android:text="@string/label_time"
+            android:gravity="start|bottom"
             android:paddingLeft="30dp"
             android:paddingRight="10dp"
             android:textStyle="bold" />
@@ -43,9 +41,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textSize="15sp"
-            android:text="26/02/2016"
             android:id="@+id/exam_list_item_time_test"
-            android:gravity="left|bottom" />
+            android:gravity="start|bottom" />
     </LinearLayout>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
@@ -55,8 +52,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textSize="15sp"
-            android:text="Room:"
-            android:gravity="left|bottom"
+            android:text="@string/label_room"
+            android:gravity="start|bottom"
             android:paddingLeft="30dp"
             android:paddingRight="10dp"
             android:textStyle="bold" />
@@ -64,8 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textSize="15sp"
-            android:text="26/02/2016"
             android:id="@+id/exam_list_item_room_test"
-            android:gravity="left|bottom" />
+            android:gravity="start|bottom" />
     </LinearLayout>
 </LinearLayout>

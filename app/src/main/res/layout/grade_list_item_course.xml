@@ -8,19 +8,15 @@
         android:layout_height="match_parent"
         android:textSize="15sp"
         android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"
-        android:text="Differential and integral calculus"
         android:id="@+id/grade_list_item_course_text"
         android:layout_weight="1"
-        android:textAlignment="gravity"
         android:gravity="left|bottom" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textSize="20sp"
-        android:text="99"
         android:id="@+id/grade_list_item_grade_text"
         android:layout_weight="5"
-        android:textAlignment="gravity"
         android:gravity="bottom|right" />
 
 </LinearLayout>
