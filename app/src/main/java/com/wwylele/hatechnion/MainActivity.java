@@ -37,12 +37,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private String getFragmentTag(int viewPagerId, int fragmentPosition) {
+        return "android:switcher:" + viewPagerId + ":" + fragmentPosition;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_logout) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
+            return true;
+        } else if (id == R.id.action_redo_translation) {
+            HebrewTranslator.clearCache(this);
+            ((GradesFragment) getSupportFragmentManager().findFragmentByTag(
+                    getFragmentTag(R.id.pager, 0))).beginTranslate();
+            ((ExamsFragment) getSupportFragmentManager().findFragmentByTag(
+                    getFragmentTag(R.id.pager, 1))).beginTranslate();
             return true;
         }
         return super.onOptionsItemSelected(item);

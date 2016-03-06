@@ -33,6 +33,8 @@ import java.util.ArrayList;
 public class GradesFragment extends Fragment {
 
     ExpandableListView gradeListView;
+    YearGrade[] gradeSet;
+    GradeListAdapter adapter;
 
     public GradesFragment() {
     }
@@ -47,14 +49,41 @@ public class GradesFragment extends Fragment {
         return rootView;
     }
 
+    public void beginTranslate() {
+        for (final YearGrade year : gradeSet) {
+            year.year.reset();
+            HebrewTranslator.requestTranslation(
+                    getActivity(),
+                    year.year,
+                    HebrewTranslator.HINT_YEAR, new HebrewTranslator.TranslationCallBack() {
+                        @Override
+                        public void callback(String result) {
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+            for (final CourseGrade course : year.grades) {
+                course.courseName.reset();
+                HebrewTranslator.requestTranslation(
+                        getActivity(),
+                        course.courseName,
+                        HebrewTranslator.HINT_COURSE, new HebrewTranslator.TranslationCallBack() {
+                            @Override
+                            public void callback(String result) {
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+            }
+        }
+    }
+
     static class CourseGrade {
-        public String courseName = "";
+        public HebrewTranslator.TextPair courseName;
         public String finalGrade = "";
         public String credits = "";
     }
 
     static class YearGrade {
-        public String year = "";
+        public HebrewTranslator.TextPair year;
         public String yearSystem = "";
         public String averageGrade = "";
         public CourseGrade[] grades;
@@ -72,7 +101,7 @@ public class GradesFragment extends Fragment {
                 String name = parser.getName();
                 switch (name) {
                     case "name":
-                        grade.courseName = XmlUtility.readTaggedText(parser, "name");
+                        grade.courseName = new HebrewTranslator.TextPair(XmlUtility.readTaggedText(parser, "name"));
                         break;
                     case "final_grade":
                         grade.finalGrade = XmlUtility.readTaggedText(parser, "final_grade");
@@ -111,7 +140,7 @@ public class GradesFragment extends Fragment {
                 String name = parser.getName();
                 switch (name) {
                     case "year":
-                        yearGrade.year = XmlUtility.readTaggedText(parser, "year");
+                        yearGrade.year = new HebrewTranslator.TextPair(XmlUtility.readTaggedText(parser, "year"));
                         break;
                     case "year_system":
                         yearGrade.yearSystem = XmlUtility.readTaggedText(parser, "year_system");
@@ -238,33 +267,10 @@ public class GradesFragment extends Fragment {
         @Override
         protected void onPostExecute(final FetchGradesResult result) {
             if (result.errorCode == FetchGradesResult.E_SUCCESS) {
-                final GradeListAdapter adapter = new GradeListAdapter(result.gradeSet);
+                adapter = new GradeListAdapter(gradeSet = result.gradeSet);
                 gradeListView.setAdapter(adapter);
 
-                for (final YearGrade year : result.gradeSet) {
-                    HebrewTranslator.requestTranslation(
-                            getActivity(),
-                            year.year,
-                            HebrewTranslator.HINT_YEAR, new HebrewTranslator.TranslationCallBack() {
-                                @Override
-                                public void callback(String result) {
-                                    year.year = result;
-                                    adapter.notifyDataSetChanged();
-                                }
-                            });
-                    for (final CourseGrade course : year.grades) {
-                        HebrewTranslator.requestTranslation(
-                                getActivity(),
-                                course.courseName,
-                                HebrewTranslator.HINT_COURSE, new HebrewTranslator.TranslationCallBack() {
-                                    @Override
-                                    public void callback(String result) {
-                                        course.courseName = result;
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                });
-                    }
-                }
+                beginTranslate();
 
             } else {
                 Snackbar.make(getView(),
@@ -326,7 +332,7 @@ public class GradesFragment extends Fragment {
                 );
             }
             ((TextView) convertView.findViewById((R.id.grade_list_item_year_text)))
-                    .setText(gradeSet[groupPosition].year);
+                    .setText(gradeSet[groupPosition].year.translation);
             ((TextView) convertView.findViewById((R.id.grade_list_item_avg_text)))
                     .setText(gradeSet[groupPosition].averageGrade.isEmpty() ? "" :
                             getString(R.string.average_grade) + ":" + gradeSet[groupPosition].averageGrade);
@@ -353,7 +359,7 @@ public class GradesFragment extends Fragment {
                 );
             }
             ((TextView) convertView.findViewById((R.id.grade_list_item_course_text)))
-                    .setText(gradeSet[groupPosition].grades[childPosition].courseName);
+                    .setText(gradeSet[groupPosition].grades[childPosition].courseName.translation);
             ((TextView) convertView.findViewById((R.id.grade_list_item_grade_text)))
                     .setText(extractGrade(gradeSet[groupPosition].grades[childPosition].finalGrade));
             return convertView;

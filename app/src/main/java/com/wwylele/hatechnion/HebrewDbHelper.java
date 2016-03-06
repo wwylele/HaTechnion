@@ -38,7 +38,6 @@ public class HebrewDbHelper extends SQLiteOpenHelper {
         contentValues.put(DictionaryEntry.COLUMN_TRANSLATION, translation);
         SQLiteDatabase db = getWritableDatabase();
         db.insert(DictionaryEntry.TABLE_NAME, null, contentValues);
-        db.close();
     }
 
     public String get(String origin) {
@@ -50,8 +49,12 @@ public class HebrewDbHelper extends SQLiteOpenHelper {
         if (!cursor.moveToFirst()) return null;
         int idx = cursor.getColumnIndex(DictionaryEntry.COLUMN_TRANSLATION);
         String result = cursor.getString(idx);
-        db.close();
         return result;
+    }
+
+    public void removeAll() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(DictionaryEntry.TABLE_NAME, "1", null);
     }
 
     public static final class DictionaryEntry implements BaseColumns {

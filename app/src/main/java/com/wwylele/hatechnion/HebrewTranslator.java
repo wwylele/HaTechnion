@@ -37,6 +37,13 @@ public class HebrewTranslator {
 
     }
 
+    public static void clearCache(Context context) {
+        if (hebrewDictionary == null) {
+            hebrewDictionary = new HebrewDbHelper(context);
+        }
+        hebrewDictionary.removeAll();
+    }
+
     public static void requestTranslation(Context context, String origin, int hint, TranslationCallBack translationCallBack) {
 
         if (hint == HINT_YEAR) {
@@ -56,6 +63,17 @@ public class HebrewTranslator {
             hebrewDictionary = new HebrewDbHelper(context);
         }
         new TranslationTask(translationCallBack).execute(origin);
+    }
+
+    public static void requestTranslation(Context context, final TextPair textPair, int hint, final TranslationCallBack translationCallBack) {
+        requestTranslation(context, textPair.origin, hint,
+                new TranslationCallBack() {
+                    @Override
+                    public void callback(String result) {
+                        textPair.translation = result;
+                        translationCallBack.callback(result);
+                    }
+                });
     }
 
     public interface TranslationCallBack {
@@ -189,6 +207,18 @@ public class HebrewTranslator {
         @Override
         protected void onPostExecute(String result) {
             if (result != null) translationCallBack.callback(result);
+        }
+    }
+
+    public static class TextPair {
+        public String origin, translation;
+
+        public TextPair(String text) {
+            origin = translation = text;
+        }
+
+        public void reset() {
+            translation = origin;
         }
     }
 }

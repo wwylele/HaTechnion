@@ -34,10 +34,11 @@ import java.util.ArrayList;
 public class ExamsFragment extends Fragment {
 
     ListView examListView;
+    ExamListAdapter adapter;
+    Exam[] exams;
 
     public ExamsFragment() {
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,11 +50,36 @@ public class ExamsFragment extends Fragment {
         return rootView;
     }
 
+    public void beginTranslate() {
+        for (final Exam exam : exams) {
+            exam.name.reset();
+            exam.room.reset();
+            HebrewTranslator.requestTranslation(
+                    getActivity(),
+                    exam.name,
+                    HebrewTranslator.HINT_COURSE, new HebrewTranslator.TranslationCallBack() {
+                        @Override
+                        public void callback(String result) {
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+            HebrewTranslator.requestTranslation(
+                    getActivity(),
+                    exam.room,
+                    HebrewTranslator.HINT_ROOM, new HebrewTranslator.TranslationCallBack() {
+                        @Override
+                        public void callback(String result) {
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+        }
+    }
+
     static class Exam {
         public String moed;
-        public String name;
+        public HebrewTranslator.TextPair name;
         public String time;
-        public String room;
+        public HebrewTranslator.TextPair room;
     }
 
     static class FetchExamsResult {
@@ -82,7 +108,7 @@ public class ExamsFragment extends Fragment {
                 String name = parser.getName();
                 switch (name) {
                     case "name":
-                        exam.name = XmlUtility.readTaggedText(parser, "name");
+                        exam.name = new HebrewTranslator.TextPair(XmlUtility.readTaggedText(parser, "name"));
                         break;
                     case "date":
                         date = XmlUtility.readTaggedText(parser, "date");
@@ -105,7 +131,7 @@ public class ExamsFragment extends Fragment {
                         }
                         break;
                     case "room":
-                        exam.room = XmlUtility.readTaggedText(parser, "room");
+                        exam.room = new HebrewTranslator.TextPair(XmlUtility.readTaggedText(parser, "room"));
                         break;
                     default:
                         XmlUtility.readTaggedText(parser, name);
@@ -163,11 +189,11 @@ public class ExamsFragment extends Fragment {
             ((TextView) convertView.findViewById((R.id.exam_list_item_moed_test)))
                     .setText(exams[position].moed);
             ((TextView) convertView.findViewById((R.id.exam_list_item_name_test)))
-                    .setText(exams[position].name);
+                    .setText(exams[position].name.translation);
             ((TextView) convertView.findViewById((R.id.exam_list_item_time_test)))
                     .setText(exams[position].time);
             ((TextView) convertView.findViewById((R.id.exam_list_item_room_test)))
-                    .setText(exams[position].room);
+                    .setText(exams[position].room.translation);
 
             return convertView;
         }
@@ -255,30 +281,9 @@ public class ExamsFragment extends Fragment {
         @Override
         protected void onPostExecute(final FetchExamsResult result) {
             if (result.errorCode == FetchExamsResult.E_SUCCESS) {
-                final ExamListAdapter adapter = new ExamListAdapter(result.exams);
+                adapter = new ExamListAdapter(exams = result.exams);
                 examListView.setAdapter(adapter);
-                for (final Exam exam : result.exams) {
-                    HebrewTranslator.requestTranslation(
-                            getActivity(),
-                            exam.name,
-                            HebrewTranslator.HINT_COURSE, new HebrewTranslator.TranslationCallBack() {
-                                @Override
-                                public void callback(String result) {
-                                    exam.name = result;
-                                    adapter.notifyDataSetChanged();
-                                }
-                            });
-                    HebrewTranslator.requestTranslation(
-                            getActivity(),
-                            exam.room,
-                            HebrewTranslator.HINT_ROOM, new HebrewTranslator.TranslationCallBack() {
-                                @Override
-                                public void callback(String result) {
-                                    exam.room = result;
-                                    adapter.notifyDataSetChanged();
-                                }
-                            });
-                }
+                beginTranslate();
 
 
             } else {
@@ -289,6 +294,4 @@ public class ExamsFragment extends Fragment {
             }
         }
     }
-
-
 }

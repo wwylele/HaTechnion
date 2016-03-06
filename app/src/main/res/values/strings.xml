@@ -25,4 +25,5 @@
     <string name="label_time">Time &amp; date:</string>
 
     <string name="action_logout">Sign out</string>
+    <string name="action_redo_translation">Redo translation</string>
 </resources>
