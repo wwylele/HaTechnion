@@ -49,6 +49,7 @@ public class HebrewDbHelper extends SQLiteOpenHelper {
         if (!cursor.moveToFirst()) return null;
         int idx = cursor.getColumnIndex(DictionaryEntry.COLUMN_TRANSLATION);
         String result = cursor.getString(idx);
+        cursor.close();
         return result;
     }
 

@@ -338,7 +338,7 @@ public class GradesFragment extends Fragment {
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = GradesFragment.this.getActivity().getLayoutInflater().inflate(
-                        R.layout.grade_list_item_year, null
+                        R.layout.grade_list_item_year, parent, false
                 );
             }
             ((TextView) convertView.findViewById((R.id.grade_list_item_year_text)))

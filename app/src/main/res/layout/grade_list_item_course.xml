@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -10,13 +11,15 @@
         android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"
         android:id="@+id/grade_list_item_course_text"
         android:layout_weight="1"
-        android:gravity="left|bottom" />
+        android:gravity="left|bottom"
+        tools:text="F*ck somebody"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textSize="20sp"
         android:id="@+id/grade_list_item_grade_text"
         android:layout_weight="5"
-        android:gravity="bottom|right" />
+        android:gravity="bottom|right"
+        tools:text="90"/>
 
 </LinearLayout>

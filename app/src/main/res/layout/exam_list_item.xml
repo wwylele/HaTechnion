@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -16,13 +17,15 @@
             android:gravity="left|bottom"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:textStyle="bold|italic" />
+            android:textStyle="bold|italic"
+            tools:text="A"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textSize="20sp"
             android:id="@+id/exam_list_item_name_test"
-            android:gravity="left|bottom" />
+            android:gravity="left|bottom"
+            tools:text="F**k somebody"/>
     </LinearLayout>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
@@ -42,7 +45,8 @@
             android:layout_height="match_parent"
             android:textSize="15sp"
             android:id="@+id/exam_list_item_time_test"
-            android:gravity="start|bottom" />
+            android:gravity="start|bottom"
+            tools:text="23:00 29/02/2015"/>
     </LinearLayout>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
@@ -62,6 +66,7 @@
             android:layout_height="match_parent"
             android:textSize="15sp"
             android:id="@+id/exam_list_item_room_test"
-            android:gravity="start|bottom" />
+            android:gravity="start|bottom"
+            tools:text="House 001"/>
     </LinearLayout>
 </LinearLayout>

@@ -190,7 +190,7 @@ public class ExamsFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = ExamsFragment.this.getActivity().getLayoutInflater().inflate(
-                        R.layout.exam_list_item, null
+                        R.layout.exam_list_item, parent, false
                 );
             }
 

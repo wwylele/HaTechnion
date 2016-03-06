@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,7 +11,8 @@
         android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
         android:textSize="15sp"
         android:textColor="@android:color/primary_text_light"
-        android:id="@+id/grade_list_item_year_text"/>
+        android:id="@+id/grade_list_item_year_text"
+        tools:text="Unknown semester"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
