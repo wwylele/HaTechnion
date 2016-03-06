@@ -51,27 +51,35 @@ public class ExamsFragment extends Fragment {
     }
 
     public void beginTranslate() {
-        for (final Exam exam : exams) {
-            exam.name.reset();
-            exam.room.reset();
-            HebrewTranslator.requestTranslation(
-                    getActivity(),
-                    exam.name,
-                    HebrewTranslator.HINT_COURSE, new HebrewTranslator.TranslationCallBack() {
-                        @Override
-                        public void callback(String result) {
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
-            HebrewTranslator.requestTranslation(
-                    getActivity(),
-                    exam.room,
-                    HebrewTranslator.HINT_ROOM, new HebrewTranslator.TranslationCallBack() {
-                        @Override
-                        public void callback(String result) {
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
+        if (((MainActivity) getActivity()).doTranslate)
+            for (final Exam exam : exams) {
+                exam.name.reset();
+                exam.room.reset();
+                HebrewTranslator.requestTranslation(
+                        getActivity(),
+                        exam.name,
+                        HebrewTranslator.HINT_COURSE, new HebrewTranslator.TranslationCallBack() {
+                            @Override
+                            public void callback(String result) {
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+                HebrewTranslator.requestTranslation(
+                        getActivity(),
+                        exam.room,
+                        HebrewTranslator.HINT_ROOM, new HebrewTranslator.TranslationCallBack() {
+                            @Override
+                            public void callback(String result) {
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+            }
+        else {
+            for (final Exam exam : exams) {
+                exam.name.reset();
+                exam.room.reset();
+            }
+            adapter.notifyDataSetChanged();
         }
     }
 

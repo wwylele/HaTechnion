@@ -1,7 +1,9 @@
 package com.wwylele.hatechnion;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -14,12 +16,16 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity {
 
     public String ticket, username, real;
+    public boolean doTranslate;
 
     ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        doTranslate = PreferenceManager
+                .getDefaultSharedPreferences(this).getBoolean("do_translate", true);
 
         Bundle extras = getIntent().getExtras();
         ticket = extras.getString("ticket");
@@ -55,12 +61,24 @@ public class MainActivity extends AppCompatActivity {
             ((ExamsFragment) getSupportFragmentManager().findFragmentByTag(
                     getFragmentTag(R.id.pager, 1))).beginTranslate();
             return true;
+        } else if (id == R.id.action_check_translation) {
+            item.setChecked(doTranslate = !item.isChecked());
+            SharedPreferences.Editor editor = PreferenceManager
+                    .getDefaultSharedPreferences(this).edit();
+            editor.putBoolean("do_translate", doTranslate);
+            editor.apply();
+            ((GradesFragment) getSupportFragmentManager().findFragmentByTag(
+                    getFragmentTag(R.id.pager, 0))).beginTranslate();
+            ((ExamsFragment) getSupportFragmentManager().findFragmentByTag(
+                    getFragmentTag(R.id.pager, 1))).beginTranslate();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        menu.findItem(R.id.action_check_translation).setChecked(doTranslate);
         return true;
     }
 

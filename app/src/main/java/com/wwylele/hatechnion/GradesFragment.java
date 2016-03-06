@@ -50,29 +50,39 @@ public class GradesFragment extends Fragment {
     }
 
     public void beginTranslate() {
-        for (final YearGrade year : gradeSet) {
-            year.year.reset();
-            HebrewTranslator.requestTranslation(
-                    getActivity(),
-                    year.year,
-                    HebrewTranslator.HINT_YEAR, new HebrewTranslator.TranslationCallBack() {
-                        @Override
-                        public void callback(String result) {
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
-            for (final CourseGrade course : year.grades) {
-                course.courseName.reset();
+        if (((MainActivity) getActivity()).doTranslate)
+            for (final YearGrade year : gradeSet) {
+                year.year.reset();
                 HebrewTranslator.requestTranslation(
                         getActivity(),
-                        course.courseName,
-                        HebrewTranslator.HINT_COURSE, new HebrewTranslator.TranslationCallBack() {
+                        year.year,
+                        HebrewTranslator.HINT_YEAR, new HebrewTranslator.TranslationCallBack() {
                             @Override
                             public void callback(String result) {
                                 adapter.notifyDataSetChanged();
                             }
                         });
+                for (final CourseGrade course : year.grades) {
+                    course.courseName.reset();
+                    HebrewTranslator.requestTranslation(
+                            getActivity(),
+                            course.courseName,
+                            HebrewTranslator.HINT_COURSE, new HebrewTranslator.TranslationCallBack() {
+                                @Override
+                                public void callback(String result) {
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+                }
             }
+        else {
+            for (final YearGrade year : gradeSet) {
+                year.year.reset();
+                for (final CourseGrade course : year.grades) {
+                    course.courseName.reset();
+                }
+            }
+            adapter.notifyDataSetChanged();
         }
     }
 
